@@ -159,6 +159,11 @@ dialog{border:0;padding:0;background:var(--card);color:var(--ink);width:100%;max
 dialog::backdrop{background:rgba(0,20,10,.6)}
 .dlg-img{aspect-ratio:16/10;background:var(--green-2);position:relative}
 .dlg-img img,.dlg-img svg{width:100%;height:100%;object-fit:cover}
+.dlg-img.has-gal{aspect-ratio:4/5;max-height:62vh}
+.gal{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.gal-count{position:absolute;left:12px;bottom:12px;background:rgba(0,34,18,.75);color:#F3EEE2;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px}
 .dlg-close{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,34,18,.75);color:#F3EEE2;font-size:1.5rem;line-height:1;cursor:pointer}
 .dlg-body{padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}
 .dlg-body h3{font-size:1.4rem;margin-top:4px}
@@ -528,7 +533,7 @@ function initSite(){
   const dlg=$('#dlg');
   function openObj(o){
     dlg.innerHTML=`
-      <div class="dlg-img">${cover(o)}<span class="badge">${esc(o.badge)}</span><button class="dlg-close" type="button" aria-label="Закрити">×</button></div>
+      <div class="dlg-img${o.gallery&&o.gallery.length>1?' has-gal':''}">${o.gallery&&o.gallery.length>1?`<div class="gal">${o.gallery.map((p,i)=>`<img src="${esc(p)}" alt="${esc(o.title)}, фото ${i+1}" loading="${i?'lazy':'eager'}">`).join('')}</div><span class="gal-count">${o.gallery.length} фото · гортайте →</span>`:cover(o)}<span class="badge">${esc(o.badge)}</span><button class="dlg-close" type="button" aria-label="Закрити">×</button></div>
       <div class="dlg-body">
         <p class="where">${esc(o.complex)}, ${esc(o.addr)}</p>
         <h3 id="dlg-title">${esc(o.title)}</h3>
