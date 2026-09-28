@@ -251,7 +251,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 <meta property="og:type" content="website">
 <meta property="og:title" content="Тадей — менеджер з нерухомості STATUS, Івано-Франківськ">
 <meta property="og:description" content="Квартири й будинки в Івано-Франківську: продаж, пошук під запит, консультації.">
-<meta property="og:image" content="https://tadeystatus.com.ua/media/tadey.jpg">
+<meta property="og:image" content="https://tadeystatus.com.ua/tadey.jpg">
 <meta property="og:url" content="https://tadeystatus.com.ua/">
 <meta property="og:locale" content="uk_UA">
 </head>
@@ -259,7 +259,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="STATUS нерухомість, на початок сторінки"><img src="media/logo.jpg" alt="STATUS нерухомість" width="52" height="52"></a>
+    <a class="logo" href="#top" aria-label="STATUS нерухомість, на початок сторінки"><img src="logo.jpg" alt="STATUS нерухомість" width="52" height="52"></a>
     <a class="nav-link" href="#objects">Об'єкти</a>
     <a class="btn btn-gold" href="#contact">Зв'язатися</a>
   </div>
@@ -271,7 +271,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
       <div class="hero-id">
         <div class="portrait">
           
-          <img class="tadey-photo" alt="Тадей, менеджер з нерухомості STATUS" src="media/tadey.jpg">
+          <img class="tadey-photo" alt="Тадей, менеджер з нерухомості STATUS" src="tadey.jpg">
         </div>
         <div>
           <h1>Тадей</h1>
@@ -304,9 +304,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
       </div>
       <div>
         <div class="vframe">
-          <video id="intro-video" playsinline preload="none" poster="media/video-poster.jpg" aria-label="Відео-знайомство з Тадеєм"></video>
+          <video id="intro-video" playsinline preload="none" poster="video-poster.jpg" aria-label="Відео-знайомство з Тадеєм"></video>
           <button class="vplay" id="vplay" type="button" aria-label="Увімкнути відео-знайомство">
-            <img src="media/video-poster.jpg" alt="">
+            <img src="video-poster.jpg" alt="">
             <span class="pbtn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5L7 4.5Z"/></svg></span>
             <span class="vlabel">Дивитися, 1 хв</span>
           </button>
@@ -411,7 +411,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 
   <section class="about">
     <div class="wrap">
-      <div class="about-photo"><img class="tadey-photo" alt="Тадей, менеджер з нерухомості STATUS" src="media/tadey.jpg"></div>
+      <div class="about-photo"><img class="tadey-photo" alt="Тадей, менеджер з нерухомості STATUS" src="tadey.jpg"></div>
       <div class="about-text">
         <h2>Про мене</h2>
         <p>Мене звати Тадей, я менеджер з нерухомості агенції STATUS в Івано-Франківську. Спеціалізуюся на квартирах різних типів та будинках.</p>
@@ -462,7 +462,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 
 <footer>
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="STATUS нерухомість, на початок сторінки"><img src="media/logo.jpg" alt="STATUS нерухомість" width="72" height="72"></a>
+    <a class="logo" href="#top" aria-label="STATUS нерухомість, на початок сторінки"><img src="logo.jpg" alt="STATUS нерухомість" width="72" height="72"></a>
     <p>Тадей, менеджер з нерухомості агенції STATUS. Івано-Франківськ</p>
     <p>+380 95 166 91 56 · @tadey_status</p>
   </div>
@@ -618,7 +618,7 @@ fetch('objects.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{OBJECTS=d;in
 (function(){
   var v=document.getElementById('intro-video'),btn=document.getElementById('vplay'),err=document.getElementById('verr');
   function start(){
-    v.src='media/intro.mp4';
+    v.src='intro.mp4';
     v.controls=true;
     btn.hidden=true;
     var p=v.play();
