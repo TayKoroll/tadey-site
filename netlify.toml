@@ -1,0 +1,5 @@
+# Поки сайт ще на Netlify: адреса /api/lead працює й тут (на Cloudflare її обслуговує functions/api/lead.js)
+[[redirects]]
+  from = "/api/lead"
+  to = "/.netlify/functions/lead"
+  status = 200
