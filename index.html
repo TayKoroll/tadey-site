@@ -457,8 +457,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
               <input type="radio" name="goal" id="g-consult" value="Консультація" checked><label for="g-consult">Консультація</label>
             </div>
           </fieldset>
-          <div class="field"><label for="topic">Тема заявки</label><input id="topic" name="topic" placeholder="Наприклад: консультація щодо оренди"></div>
-          <div class="field"><label for="note">Опишіть заявку детально</label><textarea id="note" name="note" rows="5" placeholder="Наприклад: хочу здати квартиру в оренду. Підкажіть, яку ціну ставити і як краще знайти орендарів."></textarea>
+          <div class="field"><label for="note">Опишіть заявку</label><textarea id="note" name="note" rows="5" placeholder="Наприклад: хочу здати квартиру в оренду. Підкажіть, яку ціну ставити і як краще знайти орендарів."></textarea>
             <button type="button" class="example" id="use-example">Вставити приклад</button></div>
           <p class="error" id="err" role="alert"></p>
           <a class="btn btn-gold add" id="send-tg" href="https://t.me/tadey_status" target="_blank" rel="noopener">Додати заявку</a>
@@ -589,20 +588,19 @@ function initSite(){
     let m='Вітаю, Тадею! Мене звати '+val('name')+'.\nЦікавить: '+goal.toLowerCase()+'.';
     if(picked) m+='\nОб\'єкт: '+picked.title+', '+picked.complex+' ('+picked.price+').';
     m+='\nМій телефон: '+val('phone')+'.';
-    if(val('topic')) m+='\nТема: '+val('topic')+'.';
     if(val('note')) m+='\n'+val('note');
     return m;
   }
   const EX={
-    "Купити":{topic:"Наприклад: купівля 2-кімнатної квартири",note:"Наприклад: шукаю 2-кімнатну квартиру в новобудові, бажано з ремонтом та індивідуальним опаленням. Бюджет до 70 000 $. Розглядаю центр або район біля озера. Можу дивитися у вихідні."},
-    "Продати":{topic:"Наприклад: продаж 1-кімнатної квартири",note:"Наприклад: хочу продати 1-кімнатну квартиру, 42 м², 5 поверх з 9. Ремонт 2021 року, залишаю меблі. Хочу зрозуміти, за яку ціну реально продати і як швидко."},
-    "Консультація":{topic:"Наприклад: консультація щодо оренди",note:"Наприклад: хочу здати квартиру в оренду. Підкажіть, яку ціну ставити і як краще знайти орендарів."}
+    "Купити":{note:"Наприклад: шукаю 2-кімнатну квартиру в новобудові, бажано з ремонтом та індивідуальним опаленням. Бюджет до 70 000 $. Розглядаю центр або район біля озера. Можу дивитися у вихідні."},
+    "Продати":{note:"Наприклад: хочу продати 1-кімнатну квартиру, 42 м², 5 поверх з 9. Ремонт 2021 року, залишаю меблі. Хочу зрозуміти, за яку ціну реально продати і як швидко."},
+    "Консультація":{note:"Наприклад: хочу здати квартиру в оренду. Підкажіть, яку ціну ставити і як краще знайти орендарів."}
   };
   function goalNow(){return (document.querySelector('input[name="goal"]:checked')||{}).value||'Консультація';}
-  function setExamples(){const e=EX[goalNow()];$('#topic').placeholder=e.topic;$('#note').placeholder=e.note;}
+  function setExamples(){const e=EX[goalNow()];$('#note').placeholder=e.note;}
   document.querySelectorAll('input[name="goal"]').forEach(r=>r.addEventListener('change',setExamples));
   const clean=s=>{s=s.replace('Наприклад: ','');return s.charAt(0).toUpperCase()+s.slice(1);};
-  $('#use-example').addEventListener('click',()=>{const e=EX[goalNow()];$('#topic').value=clean(e.topic);$('#note').value=clean(e.note);$('#note').focus();update();});
+  $('#use-example').addEventListener('click',()=>{const e=EX[goalNow()];$('#note').value=clean(e.note);$('#note').focus();update();});
   function update(){vb.href='viber://chat?number=%2B380951669156&draft='+encodeURIComponent(message());}
   form.addEventListener('input',update);form.addEventListener('change',update);setExamples();update();
   function copy(text){
@@ -626,10 +624,10 @@ function initSite(){
     if(sending)return;sending=true;const label=tg.textContent;tg.textContent='Надсилаємо…';
     const fallback=()=>{copy(message());show('Не вдалося надіслати напряму. Текст заявки скопійовано, вставте його в Telegram.');window.open('https://t.me/tadey_status','_blank','noopener');};
     try{
-      const r=await fetch('/.netlify/functions/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:val('name'),phone:val('phone'),goal:goalNow(),topic:val('topic'),note:val('note'),object:picked?(picked.title+', '+picked.complex+' ('+picked.price+')'):'',website:''})});
+      const r=await fetch('/.netlify/functions/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:val('name'),phone:val('phone'),goal:goalNow(),note:val('note'),object:picked?(picked.title+', '+picked.complex+' ('+picked.price+')'):'',website:''})});
       if(!r.ok)throw new Error('bad');
       show('Дякуємо! Заявку надіслано, я скоро вам зателефоную.');
-      $('#note').value='';$('#topic').value='';update();
+      $('#note').value='';update();
     }catch(x){fallback();}
     finally{sending=false;tg.textContent=label;}
   });

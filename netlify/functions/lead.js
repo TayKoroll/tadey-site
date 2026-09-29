@@ -18,7 +18,6 @@ exports.handler = async (event) => {
   const lines = ['🔔 Нова заявка з сайту', '',
     '👤 ' + name, '📞 ' + phone, '🎯 ' + clip(d.goal, 30)];
   if (d.object) lines.push('🏠 ' + clip(d.object, 200));
-  if (d.topic) lines.push('📌 ' + clip(d.topic, 150));
   if (d.note) lines.push('', '💬 ' + clip(d.note, 1500));
 
   const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
