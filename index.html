@@ -142,6 +142,10 @@ footer .logo img{width:72px;height:72px}
 .obj-img{position:relative;aspect-ratio:4/3;background:var(--green-2)}
 .obj-img img,.obj-img svg{width:100%;height:100%;object-fit:cover}
 .badge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--green);font-weight:700;font-size:.78rem;padding:5px 10px;border-radius:999px}
+.tag{position:absolute;top:46px;left:12px;background:rgba(0,34,18,.86);color:#E7CF9F;font-weight:600;font-size:.74rem;padding:5px 10px;border-radius:999px;border:1px solid rgba(206,154,67,.55);z-index:2}
+.note-box{margin-top:14px;padding:16px 18px;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:14px;background:rgba(206,154,67,.10);font-size:.95rem;line-height:1.55}
+.note-box b{font-weight:600}
+.note-box a{font-weight:600;color:var(--ink);text-decoration-color:var(--gold);text-underline-offset:4px}
 .obj-body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
 .price{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--ink)}
 .obj h3{font-family:var(--sans);font-size:1rem;font-weight:600;line-height:1.35}
@@ -410,7 +414,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
       <p class="intro">Натисніть на об'єкт, щоб побачити деталі, або одразу запитайте про нього</p>
       <div class="chips" role="group" aria-label="Фільтр об'єктів" id="chips"></div>
       <div class="track" id="track" aria-live="polite"></div>
-      <p class="more">Не знайшли потрібне? <a href="#contact" data-goal="Купити">Опишіть свій запит</a>, і я підберу варіанти.</p>
+      <div class="note-box"><b>Це лише частина об'єктів.</b> В агенції їх набагато більше. Напишіть свій запит, і я підберу для вас варіанти. <a href="#contact" data-goal="Купити">Залишити запит</a></div>
     </div>
   </section>
 
@@ -458,7 +462,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
             <button type="button" class="example" id="use-example">Вставити приклад</button></div>
           <p class="error" id="err" role="alert"></p>
           <a class="btn btn-gold add" id="send-tg" href="https://t.me/tadey_status" target="_blank" rel="noopener">Додати заявку</a>
-          <p class="hint">Заявка відкриється в Telegram, а її текст скопіюється автоматично. Якщо він не з'явився в чаті, просто вставте його. Зручніше у Viber? <a id="send-viber" href="viber://chat?number=%2B380951669156">Надіслати у Viber</a></p>
+          <p class="hint">Заявка надійде мені напряму, і я передзвоню вам. Зручніше у Viber? <a id="send-viber" href="viber://chat?number=%2B380951669156">Надіслати у Viber</a></p>
         </form>
       </div>
     </div>
@@ -513,7 +517,7 @@ function initSite(){
     const list=OBJECTS.filter(o=>current==="Всі"||o.filter===current);
     track.innerHTML=list.length?list.map(o=>`
       <article class="obj">
-        <div class="obj-img">${cover(o)}<span class="badge">${esc(o.badge)}</span></div>
+        <div class="obj-img">${cover(o)}<span class="badge">${esc(o.badge)}</span>${o.tag?`<span class="tag">${esc(o.tag)}</span>`:''}</div>
         <div class="obj-body">
           <p class="price">${esc(o.price)}</p>
           <h3>${esc(o.title)}</h3>
@@ -533,7 +537,7 @@ function initSite(){
   const dlg=$('#dlg');
   function openObj(o){
     dlg.innerHTML=`
-      <div class="dlg-img${o.gallery&&o.gallery.length>1?' has-gal':''}">${o.gallery&&o.gallery.length>1?`<div class="gal">${o.gallery.map((p,i)=>`<img src="${esc(p)}" alt="${esc(o.title)}, фото ${i+1}" loading="${i?'lazy':'eager'}">`).join('')}</div><span class="gal-count">${o.gallery.length} фото · гортайте →</span>`:cover(o)}<span class="badge">${esc(o.badge)}</span><button class="dlg-close" type="button" aria-label="Закрити">×</button></div>
+      <div class="dlg-img${o.gallery&&o.gallery.length>1?' has-gal':''}">${o.gallery&&o.gallery.length>1?`<div class="gal">${o.gallery.map((p,i)=>`<img src="${esc(p)}" alt="${esc(o.title)}, фото ${i+1}" loading="${i?'lazy':'eager'}">`).join('')}</div><span class="gal-count">${o.gallery.length} фото · гортайте →</span>`:cover(o)}<span class="badge">${esc(o.badge)}</span>${o.tag?`<span class="tag">${esc(o.tag)}</span>`:''}<button class="dlg-close" type="button" aria-label="Закрити">×</button></div>
       <div class="dlg-body">
         <p class="where">${esc(o.complex)}, ${esc(o.addr)}</p>
         <h3 id="dlg-title">${esc(o.title)}</h3>
@@ -612,7 +616,23 @@ function initSite(){
     if(phone.length<9){e.preventDefault();err.textContent='Вкажіть номер телефону, щоб я міг вам передзвонити.';$('#phone').focus();return;}
     err.textContent='';copy(message());show('Текст заявки скопійовано. Вставте його в чат, якщо він не з\'явився.');
   }
-  tg.addEventListener('click',check);
+  let sending=false;
+  tg.addEventListener('click',async e=>{
+    e.preventDefault();
+    const phone=val('phone').replace(/\D/g,'');
+    if(!val('name')){err.textContent='Вкажіть, будь ласка, ваше ім\'я.';$('#name').focus();return;}
+    if(phone.length<9){err.textContent='Вкажіть номер телефону, щоб я міг вам передзвонити.';$('#phone').focus();return;}
+    err.textContent='';
+    if(sending)return;sending=true;const label=tg.textContent;tg.textContent='Надсилаємо…';
+    const fallback=()=>{copy(message());show('Не вдалося надіслати напряму. Текст заявки скопійовано, вставте його в Telegram.');window.open('https://t.me/tadey_status','_blank','noopener');};
+    try{
+      const r=await fetch('/.netlify/functions/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:val('name'),phone:val('phone'),goal:goalNow(),topic:val('topic'),note:val('note'),object:picked?(picked.title+', '+picked.complex+' ('+picked.price+')'):'',website:''})});
+      if(!r.ok)throw new Error('bad');
+      show('Дякуємо! Заявку надіслано, я скоро вам зателефоную.');
+      $('#note').value='';$('#topic').value='';update();
+    }catch(x){fallback();}
+    finally{sending=false;tg.textContent=label;}
+  });
   vb.addEventListener('click',e=>{update();check(e);});
   form.addEventListener('submit',e=>e.preventDefault());
 }
